@@ -4,6 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 
 SEED: int = 42
+# Memory units are treated as MB-equivalent for the simulator.
 TOTAL_MEMORY: int = 512
 SEQUENCE_LENGTH: int = 250
 PREDICTION_TOP_K: int = 2

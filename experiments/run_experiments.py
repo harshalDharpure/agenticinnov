@@ -22,7 +22,7 @@ from utils.logger import get_logger
 from utils.metrics import MetricsSummary, SimulationMetrics
 
 LOGGER = get_logger(__name__)
-PLOT_COLORS = plt.get_cmap("tab10").colors
+plot_colors = plt.get_cmap("tab10").colors
 BASELINE_POLICIES = {"LRU": LRUBaseline, "FIFO": FIFOBaseline}
 
 
@@ -140,7 +140,7 @@ def run_agentic(
 def plot_metric(results: pd.DataFrame, metric: str, path: Path) -> None:
     """Plot a single metric for each method."""
     plt.figure(figsize=(6, 4))
-    plt.bar(results["method"], results[metric], color=PLOT_COLORS[: len(results)])
+    plt.bar(results["method"], results[metric], color=plot_colors[: len(results)])
     plt.ylabel(metric.replace("_", " ").title())
     plt.tight_layout()
     plt.savefig(path)

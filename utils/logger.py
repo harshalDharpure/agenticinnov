@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 
 def get_logger(name: str = "agentic") -> logging.Logger:
