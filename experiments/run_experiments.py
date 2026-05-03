@@ -134,7 +134,8 @@ def run_agentic(
 def plot_metric(results: pd.DataFrame, metric: str, path: Path) -> None:
     """Plot a single metric for each method."""
     plt.figure(figsize=(6, 4))
-    plt.bar(results["method"], results[metric], color=["#4c72b0", "#55a868", "#c44e52"])
+    colors = plt.get_cmap("tab10").colors
+    plt.bar(results["method"], results[metric], color=colors[: len(results)])
     plt.ylabel(metric.replace("_", " ").title())
     plt.tight_layout()
     plt.savefig(path)

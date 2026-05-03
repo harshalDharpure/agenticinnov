@@ -54,8 +54,7 @@ class MemoryEnvironment:
         if app.name in self.loaded_apps:
             app.last_accessed = step
             return True
-        loaded = self.load_app(app, step)
-        return loaded and app.is_loaded
+        return self.load_app(app, step)
 
     def get_state(self) -> EnvironmentState:
         """Return a snapshot of the environment state."""
