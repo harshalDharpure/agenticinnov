@@ -32,6 +32,12 @@ def build_app_catalog(app_config: Dict[str, Dict[str, float]]) -> Dict[str, App]
     }
 
 
+def reset_catalog(app_catalog: Dict[str, App]) -> None:
+    """Reset app states between simulation runs."""
+    for app in app_catalog.values():
+        app.unload()
+
+
 def generate_sequence(app_names: List[str], length: int, seed: int) -> List[str]:
     """Generate an app usage sequence using a random Markov process."""
     rng = np.random.default_rng(seed)
@@ -149,21 +155,22 @@ def run_all(
     app_catalog = build_app_catalog(app_config)
     sequence = generate_sequence(list(app_catalog.keys()), sequence_length, seed)
 
-    summaries = {
-        "LRU": run_baseline(
-            sequence, build_app_catalog(app_config), total_memory, thrash_window, "LRU"
-        ),
-        "FIFO": run_baseline(
-            sequence, build_app_catalog(app_config), total_memory, thrash_window, "FIFO"
-        ),
-        "Agentic": run_agentic(
-            sequence,
-            build_app_catalog(app_config),
-            total_memory,
-            thrash_window,
-            prediction_top_k,
-        ),
-    }
+    reset_catalog(app_catalog)
+    lru_summary = run_baseline(sequence, app_catalog, total_memory, thrash_window, "LRU")
+
+    reset_catalog(app_catalog)
+    fifo_summary = run_baseline(sequence, app_catalog, total_memory, thrash_window, "FIFO")
+
+    reset_catalog(app_catalog)
+    agentic_summary = run_agentic(
+        sequence,
+        app_catalog,
+        total_memory,
+        thrash_window,
+        prediction_top_k,
+    )
+
+    summaries = {"LRU": lru_summary, "FIFO": fifo_summary, "Agentic": agentic_summary}
 
     rows = [{"method": method, **asdict(summary)} for method, summary in summaries.items()]
     results = pd.DataFrame(rows)

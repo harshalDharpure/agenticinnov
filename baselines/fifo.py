@@ -26,6 +26,8 @@ class FIFOBaseline:
                 if evicted_name is None:
                     break
                 env.evict_app(evicted_name)
+                if evicted_name in self.queue:
+                    self.queue.remove(evicted_name)
                 evicted.append(evicted_name)
             env.load_app(app, step)
             self.queue.append(app.name)
