@@ -130,7 +130,8 @@ def run_agentic(
                 cache_agent.touch(app.name)
                 load_time = app.load_time
             else:
-                load_time = app.load_time
+                LOGGER.warning("Unable to load %s due to memory constraints.", app.name)
+                load_time = 0.0
         metrics.record_access(app_name, hit, load_time, env.current_usage, step)
         previous_app = app_name
     return metrics.summarize()
