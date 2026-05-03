@@ -29,7 +29,10 @@ class MemoryEnvironment:
         return self.current_usage + app.memory_usage <= self.total_memory
 
     def load_app(self, app: App, step: int) -> bool:
-        """Load an app if memory allows. Returns True if loaded."""
+        """Load an app if memory allows.
+
+        Returns True only when the app is newly loaded into memory.
+        """
         if app.name in self.loaded_apps:
             app.last_accessed = step
             return False

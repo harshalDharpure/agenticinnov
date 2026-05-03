@@ -7,7 +7,10 @@ from typing import Dict
 
 @dataclass
 class MetricsSummary:
-    """Summary statistics for a simulation run."""
+    """Summary statistics for a simulation run.
+
+    average_memory_usage reflects the mean of memory usage snapshots per access.
+    """
 
     average_load_time: float
     cache_hit_rate: float

@@ -29,6 +29,8 @@ class FIFOBaseline:
                 evicted.append(evicted_name)
             env.load_app(app, step)
             self.queue.append(app.name)
+        elif app.name not in self.queue:
+            self.queue.append(app.name)
         load_time = 0.0 if hit else app.load_time
         return hit, load_time, evicted
 
