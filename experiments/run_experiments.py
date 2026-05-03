@@ -22,6 +22,8 @@ from utils.logger import get_logger
 from utils.metrics import MetricsSummary, SimulationMetrics
 
 LOGGER = get_logger(__name__)
+PLOT_COLORS = plt.get_cmap("tab10").colors
+BASELINE_POLICIES = {"LRU": LRUBaseline, "FIFO": FIFOBaseline}
 
 
 def build_app_catalog(app_config: Dict[str, Dict[str, float]]) -> Dict[str, App]:
@@ -61,7 +63,10 @@ def run_baseline(
     """Run a baseline policy simulation."""
     env = MemoryEnvironment(total_memory)
     metrics = SimulationMetrics(thrash_window)
-    policy = LRUBaseline() if baseline == "LRU" else FIFOBaseline()
+    policy_class = BASELINE_POLICIES.get(baseline)
+    if policy_class is None:
+        raise ValueError(f"Unknown baseline '{baseline}'")
+    policy = policy_class()
     for step, app_name in enumerate(sequence):
         app = app_catalog[app_name]
         hit, load_time, evicted = policy.handle_access(app, env, step)
@@ -134,8 +139,7 @@ def run_agentic(
 def plot_metric(results: pd.DataFrame, metric: str, path: Path) -> None:
     """Plot a single metric for each method."""
     plt.figure(figsize=(6, 4))
-    colors = plt.get_cmap("tab10").colors
-    plt.bar(results["method"], results[metric], color=colors[: len(results)])
+    plt.bar(results["method"], results[metric], color=PLOT_COLORS[: len(results)])
     plt.ylabel(metric.replace("_", " ").title())
     plt.tight_layout()
     plt.savefig(path)
