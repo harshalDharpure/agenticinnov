@@ -44,7 +44,7 @@ def generate_sequence(app_names: List[str], length: int, seed: int) -> List[str]
     """Generate an app usage sequence using a random Markov process."""
     rng = np.random.default_rng(seed)
     n = len(app_names)
-    # alpha=1 yields a near-uniform transition matrix for reproducible baselines.
+    # alpha=1 yields random but reproducible transition probabilities.
     transition = rng.dirichlet(np.ones(n), size=n)
     current = int(rng.integers(0, n))
     sequence = []
